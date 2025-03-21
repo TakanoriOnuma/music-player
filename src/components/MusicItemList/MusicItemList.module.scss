@@ -2,6 +2,8 @@
   margin: 0;
   padding: 0;
   list-style-type: none;
+  flex: 1 1 0;
+  overflow-y: auto;
 
   &__item {
     & + & {

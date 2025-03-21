@@ -2,6 +2,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { FC, useState, useMemo } from "react";
 import Modal from "react-modal";
 
+import styles from "./App.module.scss";
 import { db, Music } from "./db";
 import { AddMusicForm } from "./components/AddMusicForm";
 import { TagsManager } from "./components/TagsManager";
@@ -103,8 +104,8 @@ function App() {
   }
 
   return (
-    <div>
-      <h1>音楽プレーヤー</h1>
+    <div className={styles.App}>
+      <h1 className={styles.AppTitle}>音楽プレーヤー</h1>
       <div>
         <AddMusicFormWithModal />
         <TagsManagerWithModal />

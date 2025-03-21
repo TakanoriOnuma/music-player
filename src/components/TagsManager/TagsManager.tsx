@@ -3,7 +3,6 @@ import { useLiveQuery } from "dexie-react-hooks";
 
 import styles from "./TagsManager.module.scss";
 import { db } from "../../db";
-import { Chip } from "../Chip";
 
 export type TagsManagerProps = {};
 
@@ -41,14 +40,35 @@ export const TagsManager: FC<TagsManagerProps> = () => {
       </form>
       <ul className={styles.TagsList}>
         {tags.map((tag) => (
-          <li key={tag.id}>
-            <Chip
-              onDelete={() => {
-                db.tags.delete(tag.id);
-              }}
-            >
-              {tag.name}
-            </Chip>
+          <li key={tag.id} className={styles.TagsList__item}>
+            <div className={styles.TagItem}>
+              <div className={styles.TagItem__name}>{tag.name}</div>
+              <button
+                onClick={() => {
+                  const name = window.prompt(
+                    "タグ名を入力してください",
+                    tag.name
+                  );
+                  if (name != null) {
+                    db.tags.update(tag.id, { name });
+                  }
+                }}
+              >
+                編集
+              </button>
+              <button
+                onClick={() => {
+                  const result = window.confirm(
+                    `「${tag.name}」を削除してもよろしいですか？`
+                  );
+                  if (result) {
+                    db.tags.delete(tag.id);
+                  }
+                }}
+              >
+                削除
+              </button>
+            </div>
           </li>
         ))}
       </ul>

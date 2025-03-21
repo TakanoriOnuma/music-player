@@ -1,8 +1,23 @@
 .TagsList {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 4px;
   list-style-type: none;
   margin: 0;
   padding: 0;
+
+  &__item {
+    & + & {
+      margin-top: 8px;
+    }
+  }
+}
+
+.TagItem {
+  display: flex;
+  align-items: center;
+
+  &__name {
+    flex: 1 1 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }

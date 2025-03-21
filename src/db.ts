@@ -14,8 +14,8 @@ export type Music = {
   id: number;
   /** タイトル */
   title: string;
-  /** タグリスト */
-  tags: string[];
+  /** タグIDリスト */
+  tagIds: number[];
   /** 音楽データ */
   file: File;
 };

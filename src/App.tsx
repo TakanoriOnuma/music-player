@@ -11,6 +11,7 @@ import {
 } from "react";
 
 import { db, Music } from "./db";
+import { AddMusicForm } from "./components/AddMusicForm";
 import { TagsManager } from "./components/TagsManager";
 
 const MusicPlayer: FC<{
@@ -119,27 +120,7 @@ function App() {
   return (
     <div>
       <h1>ミュージックプレーヤー</h1>
-      <input
-        type="file"
-        accept="audio/*"
-        multiple
-        onChange={(event) => {
-          console.log(event);
-          const files = Array.from(event.target.files ?? []);
-          // 同じファイルをアップロードできるようにリセットする
-          // https://qiita.com/_Keitaro_/items/57b1c5dd36b7bed08ad8
-          event.target.value = "";
-          console.log(files);
-
-          files.forEach((file) => {
-            db.musics.add({
-              title: file.name,
-              tags: [],
-              file,
-            });
-          });
-        }}
-      />
+      <AddMusicForm />
       <TagsManager />
       <hr />
       <div>

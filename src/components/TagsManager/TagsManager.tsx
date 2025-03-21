@@ -19,7 +19,7 @@ export const TagsManager: FC<TagsManagerProps> = () => {
 
   return (
     <div>
-      <div>タグ管理</div>
+      <h2>タグ管理</h2>
       <form
         onSubmit={(event) => {
           event.preventDefault();

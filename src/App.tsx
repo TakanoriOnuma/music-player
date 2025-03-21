@@ -104,7 +104,7 @@ function App() {
 
   return (
     <div>
-      <h1>ミュージックプレーヤー</h1>
+      <h1>音楽プレーヤー</h1>
       <div>
         <AddMusicFormWithModal />
         <TagsManagerWithModal />
@@ -176,9 +176,11 @@ function App() {
           music={currentMusic}
           autoPlay={isAutoPlay}
           onEnded={() => {
-            setMusicIndex((prev) => {
-              return prev + 1;
-            });
+            if (isAutoPlay) {
+              setMusicIndex((prev) => {
+                return prev + 1;
+              });
+            }
           }}
         />
       ) : (

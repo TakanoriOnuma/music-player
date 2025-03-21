@@ -1,0 +1,1 @@
+{"name":"音楽プレーヤー","short_name":"Music","start_url":"/music-player/","display":"standalone","background_color":"#fff","lang":"ja","scope":"/music-player/","theme_color":"#2196f3","icons":[{"src":"app-icons/512x512.png","sizes":"512x512","type":"image/png"}]}

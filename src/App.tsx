@@ -1,19 +1,11 @@
 import { useLiveQuery } from "dexie-react-hooks";
-import {
-  FC,
-  useState,
-  useMemo,
-  useCallback,
-  useRef,
-  useImperativeHandle,
-  ForwardedRef,
-  useEffect,
-} from "react";
+import { FC, useState, useMemo } from "react";
 import Modal from "react-modal";
 
 import { db, Music } from "./db";
 import { AddMusicForm } from "./components/AddMusicForm";
 import { TagsManager } from "./components/TagsManager";
+import { MusicItemList } from "./components/MusicItemList";
 
 Modal.setAppElement("#root");
 
@@ -82,64 +74,6 @@ const MusicPlayer: FC<{
   );
 };
 
-type MusicItemHandler = {
-  id: number;
-  play: () => void;
-};
-
-type MusicItemProps = {
-  ref?: ForwardedRef<MusicItemHandler>;
-  music: Music;
-  onEnded?: () => void;
-};
-
-const MusicItem: FC<MusicItemProps> = ({ ref, music, onEnded }) => {
-  const elAudioRef = useRef<HTMLAudioElement | null>(null);
-
-  const url = useMemo(() => {
-    return URL.createObjectURL(music.file);
-  }, [music.file]);
-
-  const play: MusicItemHandler["play"] = useCallback(() => {
-    elAudioRef.current?.play();
-  }, []);
-
-  useImperativeHandle(
-    ref,
-    () => {
-      return {
-        id: music.id,
-        play,
-      };
-    },
-    [music.id, play]
-  );
-
-  useEffect(() => {
-    const elAudio = elAudioRef.current;
-    if (elAudio == null) {
-      return;
-    }
-
-    if (onEnded != null) {
-      elAudio.addEventListener("ended", onEnded);
-    }
-
-    return () => {
-      if (onEnded != null) {
-        elAudio.removeEventListener("ended", onEnded);
-      }
-    };
-  }, [onEnded]);
-
-  return (
-    <div>
-      <div>{music.title}</div>
-      <audio ref={elAudioRef} src={url} controls />
-    </div>
-  );
-};
-
 function App() {
   const musics = useLiveQuery(async () => {
     return await db.musics.toArray();
@@ -147,20 +81,6 @@ function App() {
 
   const [isAutoPlay, setIsAutoPlay] = useState(false);
   const [musicIndex, setMusicIndex] = useState(0);
-
-  const musicHandlersRef = useRef<Record<number, MusicItemHandler>>({});
-
-  const handleRef = useCallback((musicHandler: MusicItemHandler | null) => {
-    console.log(musicHandler);
-    if (musicHandler == null) {
-      return;
-    }
-
-    musicHandlersRef.current[musicHandler.id] = musicHandler;
-    return () => {
-      delete musicHandlersRef.current[musicHandler.id];
-    };
-  }, []);
 
   const currentMusic = musics?.[musicIndex];
 
@@ -173,6 +93,14 @@ function App() {
       <h1>ミュージックプレーヤー</h1>
       <AddMusicFormWithModal />
       <TagsManagerWithModal />
+      <hr />
+      <MusicItemList
+        selectedIndex={musicIndex}
+        musics={musics}
+        onSelectMusic={(_, index) => {
+          setMusicIndex(index);
+        }}
+      />
       <hr />
       <div>
         <label>
@@ -217,34 +145,6 @@ function App() {
           }}
         />
       )}
-      <hr />
-      <ul>
-        {musics?.map((music) => {
-          return (
-            <li key={music.id}>
-              <MusicItem
-                ref={handleRef}
-                music={music}
-                onEnded={() => {
-                  console.log("ended");
-
-                  const music = musics?.[1];
-                  if (music == null) {
-                    return;
-                  }
-
-                  const musicHandler = musicHandlersRef.current[music.id];
-                  if (musicHandler == null) {
-                    return;
-                  }
-
-                  musicHandler.play();
-                }}
-              />
-            </li>
-          );
-        })}
-      </ul>
     </div>
   );
 }

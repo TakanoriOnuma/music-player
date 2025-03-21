@@ -1,0 +1,10 @@
+.MusicItemList {
+  margin: 0;
+  padding: 0;
+
+  &__item {
+    & + & {
+      border-top: solid 1px #999;
+    }
+  }
+}

@@ -4,4 +4,25 @@
   &._selected {
     background-color: #fdd;
   }
+
+  &__header {
+    display: flex;
+    align-items: center;
+
+    &__title {
+      flex: 1 1 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
+
+.MusicItemTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 4px;
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
 }

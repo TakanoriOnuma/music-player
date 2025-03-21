@@ -1,8 +1,9 @@
 import { FC } from "react";
 
 import styles from "./MusicItemList.module.scss";
-import { Music } from "../../db";
+import { db, Music } from "../../db";
 import { MusicItem } from "./subComponents/MusicItem";
+import { useLiveQuery } from "dexie-react-hooks";
 
 export type MusicItemListProps = {
   /** 選択中のindex */
@@ -22,6 +23,14 @@ export const MusicItemList: FC<MusicItemListProps> = ({
   musics,
   onSelectMusic,
 }) => {
+  const tags = useLiveQuery(async () => {
+    return await db.tags.toArray();
+  });
+
+  if (tags == null) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <ul className={styles.MusicItemList}>
       {musics.map((music, index) => (
@@ -29,6 +38,7 @@ export const MusicItemList: FC<MusicItemListProps> = ({
           <MusicItem
             isSelected={index === selectedIndex}
             music={music}
+            tags={tags}
             onClick={() => {
               onSelectMusic(music, index);
             }}

@@ -11,6 +11,7 @@ import {
 } from "react";
 
 import { db, Music } from "./db";
+import { TagsManager } from "./components/TagsManager";
 
 const MusicPlayer: FC<{
   music: Music;
@@ -133,11 +134,13 @@ function App() {
           files.forEach((file) => {
             db.musics.add({
               title: file.name,
+              tags: [],
               file,
             });
           });
         }}
       />
+      <TagsManager />
       <hr />
       <div>
         <label>

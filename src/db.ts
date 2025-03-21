@@ -26,5 +26,18 @@ export const db = new Dexie("MusicPlayer") as Dexie & {
 };
 db.version(1).stores({
   tags: "++id, name",
-  musics: "++id, title, tags, file",
+  musics: "++id, title, file",
 });
+db.version(2)
+  .stores({
+    tags: "++id, name",
+    musics: "++id, title, file, *tagIds",
+  })
+  .upgrade((trans) => {
+    return trans
+      .table("musics")
+      .toCollection()
+      .modify((music: Music) => {
+        music.tagIds = music.tagIds ?? [];
+      });
+  });

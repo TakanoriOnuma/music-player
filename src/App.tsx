@@ -75,25 +75,62 @@ const MusicPlayer: FC<{
 };
 
 function App() {
-  const musics = useLiveQuery(async () => {
-    return await db.musics.toArray();
+  const [filterTagId, setFilterTagId] = useState<number | null>(null);
+
+  const tags = useLiveQuery(async () => {
+    return await db.tags.toArray();
   });
+  const musics = useLiveQuery(async () => {
+    return await db.musics
+      .filter((music) => {
+        if (filterTagId == null) {
+          return true;
+        }
+
+        const id = Number(filterTagId);
+        return music.tagIds.includes(id);
+      })
+      .toArray();
+  }, [filterTagId]);
 
   const [isAutoPlay, setIsAutoPlay] = useState(false);
   const [musicIndex, setMusicIndex] = useState(0);
 
   const currentMusic = musics?.[musicIndex];
 
-  if (musics == null) {
+  if (musics == null || tags == null) {
     return <div>準備中...</div>;
   }
 
   return (
     <div>
       <h1>ミュージックプレーヤー</h1>
-      <AddMusicFormWithModal />
-      <TagsManagerWithModal />
+      <div>
+        <AddMusicFormWithModal />
+        <TagsManagerWithModal />
+      </div>
       <hr />
+      <div>
+        <label>
+          絞り込み:
+          <select
+            value={filterTagId != null ? String(filterTagId) : ""}
+            onChange={(event) => {
+              const value = parseInt(event.target.value, 10);
+              setFilterTagId(Number.isNaN(value) ? null : value);
+              setIsAutoPlay(false);
+              setMusicIndex(0);
+            }}
+          >
+            <option value="">全て</option>
+            {tags.map((tag) => (
+              <option key={tag.id} value={tag.id}>
+                {tag.name}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
       <MusicItemList
         selectedIndex={musicIndex}
         musics={musics}
@@ -134,7 +171,7 @@ function App() {
           次へ
         </button>
       </div>
-      {currentMusic && (
+      {currentMusic != null ? (
         <MusicPlayer
           music={currentMusic}
           autoPlay={isAutoPlay}
@@ -144,6 +181,8 @@ function App() {
             });
           }}
         />
+      ) : (
+        <div>音楽を選択してください</div>
       )}
     </div>
   );

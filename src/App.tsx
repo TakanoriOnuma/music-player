@@ -9,10 +9,61 @@ import {
   ForwardedRef,
   useEffect,
 } from "react";
+import Modal from "react-modal";
 
 import { db, Music } from "./db";
 import { AddMusicForm } from "./components/AddMusicForm";
 import { TagsManager } from "./components/TagsManager";
+
+Modal.setAppElement("#root");
+
+const AddMusicFormWithModal: FC = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      <button
+        onClick={() => {
+          setIsOpen(true);
+        }}
+      >
+        音楽追加
+      </button>
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={() => {
+          setIsOpen(false);
+        }}
+      >
+        <AddMusicForm />
+      </Modal>
+    </>
+  );
+};
+
+const TagsManagerWithModal: FC = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      <button
+        onClick={() => {
+          setIsOpen(true);
+        }}
+      >
+        タグ管理
+      </button>
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={() => {
+          setIsOpen(false);
+        }}
+      >
+        <TagsManager />
+      </Modal>
+    </>
+  );
+};
 
 const MusicPlayer: FC<{
   music: Music;
@@ -120,8 +171,8 @@ function App() {
   return (
     <div>
       <h1>ミュージックプレーヤー</h1>
-      <AddMusicForm />
-      <TagsManager />
+      <AddMusicFormWithModal />
+      <TagsManagerWithModal />
       <hr />
       <div>
         <label>

@@ -41,7 +41,7 @@ export const AddMusicForm: FC<AddMusicFormProps> = () => {
       </div>
       <input
         type="file"
-        accept="audio/*,.mp3,.wav"
+        accept="audio/*,.mp3,.wav,.m4a"
         multiple
         onChange={(event) => {
           const files = Array.from(event.target.files ?? []);

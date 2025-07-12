@@ -11,6 +11,8 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
+      registerType: "autoUpdate",
+      injectRegister: "auto",
       manifest: {
         lang: "ja",
         name: "音楽プレーヤー",
